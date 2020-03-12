@@ -1,7 +1,9 @@
 package com.example.applicationroulette;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,9 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Button ConnexionId, CreerCompteId;
     EditText EmailId, PasswordId;
     private static String LOGIN_URL = "https://randojoe.000webhostapp.com/login.php";
+    RequestQueue requestQueue;
 
 
 
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         PasswordId = findViewById(R.id.txtPasswordLogin);
         ConnexionId = findViewById(R.id.btnConnexion);
         CreerCompteId = findViewById(R.id.btnCreerUnCompte);
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+
         ecouteConnexion();
         ecouteEnregistrement();
 
@@ -54,61 +61,51 @@ public class MainActivity extends AppCompatActivity {
                 String email = EmailId.getText().toString().trim();
                 String password = PasswordId.getText().toString().trim();
                 //on vérifie que l'email et le mot de passe sont rentrés
-                if (email.isEmpty()) {
+                if (email.isEmpty() || password.isEmpty()) {
                     EmailId.setError("Veuillez saisir un identifiant");
-                    EmailId.requestFocus();
-                } else if (password.isEmpty()) {
                     PasswordId.setError("Veuillez saisir un mot de passe");
+                    EmailId.requestFocus();
                     PasswordId.requestFocus();
+                    Log.d("Pass word","********************** l'email n'est pas saisi");
+                    Log.d("Pass word","********************** le mot de passe n'est pas saisi");
+                    return;
 
                     //on vérifie si aucun champs n'est remplis
                 } else {
-                   Login(email,password);
+                    Login();
 
                 }
-
 
             }
         });
 
     }
 
-    private void Login(final String email, final String password) {
+    private void Login() {
+        final String email= EmailId.getText().toString().trim();
+        final String password= PasswordId.getText().toString().trim();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String success = jsonObject.getString("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("login");
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("Response","********************** lancement 1 ");
+                    Log.i("tagconvertstr 1 ", "["+response+"]");
+                    Toast.makeText(getApplicationContext(),"this is response: "+response,Toast.LENGTH_LONG).show();
+                        Log.d("Response", response);
 
-                            if(success.equals("1")){
-                                for (int i = 0; i < jsonArray.length(); i++){
-                                    JSONObject object = jsonArray.getJSONObject(i);
-                                    String name = object.getString("name").trim();
-                                    String email = object.getString("email").trim();
+                        if(response.contains("success")){
+                            //Ouverture du profil
+                                openProfile();
+                        }else{
+                            Toast.makeText(MainActivity.this,"Veuilley vous inscrire!", Toast.LENGTH_LONG).show();
 
-                                    startActivity(new Intent(MainActivity.this,RegistrationActivity.class));
-
-                                    Toast.makeText(MainActivity.this,"Vous êtes connecté. \nVotre nom est: "+ name+" Votre email est "+email, Toast.LENGTH_SHORT).show();
-
-                                }
-                            }
-
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                            Toast.makeText(MainActivity.this,"la connexion a échoué "+e.toString(), Toast.LENGTH_SHORT).show();
-                           // loading.setVisibility(View.GONE);
-                            //btnEnregistrerId.setVisibility(View.VISIBLE);
                         }
-                    }
+                  }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this,"La connexion a échoué "+error.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,"La connexion a échoué "+error.toString(), Toast.LENGTH_LONG).show();
                         //loading.setVisibility(View.GONE);
                        // btnEnregistrerId.setVisibility(View.VISIBLE);
                     }
@@ -122,6 +119,15 @@ public class MainActivity extends AppCompatActivity {
                 return params;
             }
         };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+    //Ouverture du profil
+    private void openProfile() {
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
+
     }
 
     //Ecoute évènement sur bouton connexion
