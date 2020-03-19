@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,10 +34,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
     EditText PrenomId;
     EditText EmailId;
-    //EditText AdresseId;
-    //EditText TelephoneId;
+    EditText AdresseId;
+    EditText TelephoneId;
     EditText PasswordId;
+    RadioGroup RadioGroupId;
+    RadioButton RadioBouttonId;
     Button btnEnregistrerId;
+    String type = "Non";
    // private ProgressBar loading;
     private static String REGISTER_URL = "https://randojoe.000webhostapp.com/register.php";
 
@@ -46,12 +51,16 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         PrenomId = findViewById(R.id.txtPrenom);
         EmailId = findViewById(R.id.txtEmailEnre);
-        //AdresseId = findViewById(R.id.txtAdresse);
-        //TelephoneId = findViewById(R.id.txtTelephone);
+        AdresseId = findViewById(R.id.txtAdresse);
+        TelephoneId = findViewById(R.id.txtTelephone);
         PasswordId = findViewById(R.id.txtPasswordEnregistrer);
+        RadioGroupId = findViewById(R.id.RbtnGrp);
         btnEnregistrerId = findViewById(R.id.btnEnregistrer);
+
         EnregistrerAction();
     }
+
+
 
     public void EnregistrerAction (){
 
@@ -75,9 +84,22 @@ public class RegistrationActivity extends AppCompatActivity {
     //Récupération des saisis utilisateur
        final String name = PrenomId.getText().toString();
        final String email = EmailId.getText().toString();
-       //final String adresse = AdresseId.getText().toString();
-       //final String telephone = TelephoneId.getText().toString();
+       final String adresse = AdresseId.getText().toString();
+       final String telephone = TelephoneId.getText().toString();
        final String password = PasswordId.getText().toString();
+
+
+       //bouton radio
+        //ici on récupère le boutton coché
+       final int x = RadioGroupId.getCheckedRadioButtonId();
+        RadioBouttonId = findViewById(x);
+
+        if (RadioBouttonId.getText().toString().equals("Oui")){
+             type = "Oui";
+        }else{
+            type = "Non";
+        }
+        //
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {
@@ -115,7 +137,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("name",name);
                 params.put("email",email);
+                params.put("Adresse",adresse);
+                params.put("Telephone",telephone);
                 params.put("password",password);
+                params.put("Type", type);
 
                 return params;
             }

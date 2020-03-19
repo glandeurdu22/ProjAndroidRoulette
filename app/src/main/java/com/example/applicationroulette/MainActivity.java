@@ -20,9 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,22 +79,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Login() {
-        final String email= EmailId.getText().toString().trim();
-        final String password= PasswordId.getText().toString().trim();
+        final String email = EmailId.getText().toString().trim();
+        final String password = PasswordId.getText().toString().trim();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("Response","********************** lancement 1 ");
+                    //V2RIfication dans logcats
+                    Log.d("Response","********************** lancement MainActivity ");
                     Log.i("tagconvertstr 1 ", "["+response+"]");
-                    Toast.makeText(getApplicationContext(),"this is response: "+response,Toast.LENGTH_LONG).show();
-                        Log.d("Response", response);
+                    Log.d("Response", response);
 
-                        if(response.contains("success")){
+                        if(response.contains("1")){
                             //Ouverture du profil
                                 openProfile();
                         }else{
-                            Toast.makeText(MainActivity.this,"Veuilley vous inscrire!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"Veuillez-vous inscrire!", Toast.LENGTH_LONG).show();
 
                         }
                   }
@@ -125,8 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //Ouverture du profil
     private void openProfile() {
-        Intent intent = new Intent(this, RegistrationActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, HomeActivity.class));
 
     }
 
