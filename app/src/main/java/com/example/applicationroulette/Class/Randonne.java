@@ -1,44 +1,26 @@
 package com.example.applicationroulette.Class;
 
-import org.json.JSONObject;
-
-
 public class Randonne {
     private int id;
-    private String nomRando;
-    private String date;
-    private String lieu;
-    private String NbParticipant;
-    private int NbParticipantRequis;
-    private String image;
-    private String dateDeFin;
+    private String nom;
+    private String description;
+    private String detail;
+    private  int nbParticipant;
+    private int nbParticipantRequis;
+    private String dateDebut;
+    private String imageUrl;
 
-    public Randonne() { }
 
-    public Randonne(int id, String nomRando, String date, String lieu, String nbParticipant, int nbParticipantRequis, String image, String dateDeFin) {
+    public Randonne(int id, String nom, String description, String detail, int nbParticipant, int nbParticipantRequis, String dateDebut, String imageUrl) {
         this.id = id;
-        this.nomRando = nomRando;
-        this.date = date;
-        this.lieu = lieu;
-        NbParticipant = nbParticipant;
-        NbParticipantRequis = nbParticipantRequis;
-        this.image = image;
-        this.dateDeFin = dateDeFin;
+        this.nom = nom;
+        this.description = description;
+        this.detail = detail;
+        this.nbParticipant = nbParticipant;
+        this.nbParticipantRequis = nbParticipantRequis;
+        this.dateDebut = dateDebut;
+        this.imageUrl = imageUrl;
     }
-
-
-
-
-    /*public Randonne(JSONObject jObject) {
-        this.id = jObject.optInt("id");
-        this.nomRando = jObject.optString("nomRando");
-        this.date = jObject.optString("date");
-        this.lieu = jObject.optString("lieu");
-        this.NbParticipant = jObject.optInt("NbParticipant");
-        this.NbParticipantRequis = jObject.optInt("NbParticipantRequis");
-        this.dateDeFin = jObject.optString("dateDeFin");
-    }*/
-
 
     public int getId() {
         return id;
@@ -48,59 +30,60 @@ public class Randonne {
         this.id = id;
     }
 
-    public String getNomRando() {
-        return nomRando;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNomRando(String nomRando) {
-        this.nomRando = nomRando;
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
-    public String getDate() {
-        return date;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getLieu() {
-        return lieu;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
-    public String getNbParticipant() {
-        return NbParticipant;
+    public int getNbParticipant() {
+        return nbParticipant;
     }
 
-    public void setNbParticipant(String nbParticipant) {
-        NbParticipant = nbParticipant;
+    public void setNbParticipant(int nbParticipant) {
+        this.nbParticipant = nbParticipant;
     }
 
     public int getNbParticipantRequis() {
-        return NbParticipantRequis;
+        return nbParticipantRequis;
     }
 
     public void setNbParticipantRequis(int nbParticipantRequis) {
-        NbParticipantRequis = nbParticipantRequis;
+        this.nbParticipantRequis = nbParticipantRequis;
     }
 
-    public String getImage() {
-        return image;
+    public String getDateDebut() {
+        return dateDebut;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setDateDebut(String dateDebut) {
+        this.dateDebut = dateDebut;
     }
 
-    public String getDateDeFin() {
-        return dateDeFin;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setDateDeFin(String dateDeFin) {
-        this.dateDeFin = dateDeFin;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
+
