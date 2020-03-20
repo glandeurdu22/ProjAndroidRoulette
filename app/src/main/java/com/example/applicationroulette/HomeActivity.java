@@ -1,10 +1,11 @@
 package com.example.applicationroulette;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,83 +13,86 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.applicationroulette.Class.Adapter;
 import com.example.applicationroulette.Class.Randonne;
+import com.example.applicationroulette.Class.RandonneAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
-    RequestQueue requestQueue;
-    Adapter adapter;
-    ArrayList<Randonne> randonnes;
-    LinearLayoutManager linearLayoutManager;
-    Context ctx;
-    Randonne randonne;
 
-    private static String AfficherRando_URL = "https://randojoe.000webhostapp.com/AffichageRando.php";
-
+    private static final String Affichage_Url = "https://randojoe.000webhostapp.com/AffichageRando.php";
+    private RecyclerView recyclerView;
+    private List<Randonne> randonnes;
+    private RandonneAdapter randonneAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        recyclerView = findViewById(R.id.LesRandos);
+        recyclerView = (RecyclerView) this.findViewById(R.id.ViewRando);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(true);
         randonnes = new ArrayList<>();
-        parseJson();
+        randonneAdapter = new RandonneAdapter(randonnes,this);
+        recyclerView.setAdapter(randonneAdapter);
+
+        RecupData();
 
     }
 
-    private void parseJson() {
-        requestQueue = Volley.newRequestQueue(this);
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, AfficherRando_URL, null, new Response.Listener<JSONArray>() {
+    private void RecupData() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Affichage_Url, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
 
                 Log.d("Response","********************** lancement HomeActivity ");
-                Log.i("tagconvertstr 1 ", "["+response+"]");
-                Log.d("Response", String.valueOf(response));
+                Log.d("Response", response);
+                try {
 
+                    Log.d("Response 2", response);
 
-                    for (int i = 0; i<response.length(); i++) {
-                        try {
+                    JSONObject jsonObject=new JSONObject(response);
+                    JSONArray  array=jsonObject.getJSONArray("data");
+                    if(response.contains("data")){
+                        Log.d("Response 3", response);
 
+                        for (int i = 0; i <array.length(); i++) {
+                            JSONObject ob = array.getJSONObject(i);
+                            Log.d("Response 4", response);
 
-                            JSONObject randoObjet = response.getJSONObject(i);
+                            Randonne randonneList = new Randonne(ob.getInt("id"), ob.getString("nom"), ob.getString("description"), ob.getString("detail"), ob.getInt("nbParticipant"), ob.getInt("nbParticipantRequis"), ob.getString("dateDebut"), ob.getString("imageUrl"));
 
-                            Randonne randonne = new Randonne();
-                            randonne.setNomRando(randoObjet.getString("NomRando"));
-                            randonne.setNbParticipant(randoObjet.getString("NbParticipant"));
-                            randonne.setImage(randoObjet.getString("image"));
+                            randonnes.add(randonneList);
+                            recyclerView.setAdapter(randonneAdapter);
+                            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL);
+                            recyclerView.addItemDecoration(dividerItemDecoration);
 
-                            randonnes.add(randonne);
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    adapter = new Adapter(getApplicationContext(),randonnes);
-                    recyclerView.setAdapter(adapter);
+                        }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-
+            }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("tag","onErrorResponse: " +  error.getMessage());
 
             }
         });
-        requestQueue.add(jsonArrayRequest);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
+//Décoration
+
 }
+

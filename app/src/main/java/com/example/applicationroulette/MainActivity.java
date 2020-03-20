@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.applicationroulette.Class.RandonneAdapter;
 
 
 import java.util.HashMap;
@@ -123,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
     //Ouverture du profil
     private void openProfile() {
         startActivity(new Intent(this, HomeActivity.class));
+
+        Toast.makeText(MainActivity.this,"Voici la liste",Toast.LENGTH_LONG).show();
+
 
     }
 
