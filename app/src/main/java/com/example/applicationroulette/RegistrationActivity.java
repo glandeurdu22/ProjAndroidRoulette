@@ -75,8 +75,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-
-
     private void EnregistrerMembre() {
         //loading.setVisibility(View.VISIBLE);
       //  btnEnregistrerId.setVisibility(View.GONE);
