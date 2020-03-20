@@ -2,27 +2,24 @@ package com.example.applicationroulette;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.applicationroulette.Class.Randonne;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class RandoActive extends AppCompatActivity {
     TextView NomId;
@@ -30,14 +27,13 @@ public class RandoActive extends AppCompatActivity {
     TextView LieuId;
     TextView NombreRequisId;
     TextView EcheanceId;
-    // private ProgressBar loading;
-    private static String REGISTER_URL = "https://randojoe.000webhostapp.com/DetailRando.php";
+    private static String REGISTER_URL = "https://randojoe.000webhostapp.com/AfficherRando.php";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.fake_detail_rando_montblanc);
         NomId = findViewById(R.id.textViewNom);
         DateId = findViewById(R.id.textViewdate);
         LieuId = findViewById(R.id.textViewLaval);
@@ -56,26 +52,32 @@ public class RandoActive extends AppCompatActivity {
                         Log.i("randoactive ", "["+response+"]");
                         Toast.makeText(getApplicationContext(),"this is response rando active: "+response,Toast.LENGTH_LONG).show();
                         Log.d("Response", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String success = jsonObject.getString("success");
-                            Randon a = new Randon(jsonObject);
-                            String nom = a.getNomRando();
-                            String date = a.getDate();
-                            String lieu = a.getLieu();
-                            String nb = a.getNbParticipantRequis();
-                            String echean = a.getEcheance();
-                            NomId.setText(nom);
-                            DateId.setText(date);
-                            LieuId.setText(lieu);
-                            NombreRequisId.setText(nb);
-                            EcheanceId.setText(echean);
 
-                        }catch (JSONException e){
+                        try {
+
+                            JSONObject jsonObject=new JSONObject(response);
+                            JSONArray array=jsonObject.getJSONArray("data");
+                            if(response.contains("data")) {
+                                Log.d("Response 3", response);
+                                for (int i = 0; i < array.length(); i++) {
+                                    JSONObject ob = array.getJSONObject(i);
+                                    Log.d("Response 4", response);
+                                    Randonne randonneList = new Randonne(ob.getInt("id"), ob.getString("nom"), ob.getString("description"), ob.getString("detail"), ob.getInt("nbParticipant"), ob.getInt("nbParticipantRequis"), ob.getString("dateDebut"), ob.getString("imageUrl"));
+                                    String nom = randonneList.getNom();
+                                    String date = randonneList.getDateDebut();
+                                    String lieu = randonneList.getDescription();
+                                    int nb = randonneList.getNbParticipantRequis();
+                                    String echean = randonneList.getDetail();
+                                    NomId.setText(String.valueOf(nom));
+                                    DateId.setText(String.valueOf(date));
+                                    LieuId.setText(String.valueOf(lieu));
+                                    NombreRequisId.setText(String.valueOf(nb));
+                                    EcheanceId.setText(String.valueOf(echean));
+                                }
+                            }
+
+                        } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(RandoActive.this,"L'enregistrement a échoué "+e.toString(), Toast.LENGTH_LONG).show();
-                            //loading.setVisibility(View.GONE);
-                            // btnEnregistrerId.setVisibility(View.VISIBLE);
                         }
                     }
                 },

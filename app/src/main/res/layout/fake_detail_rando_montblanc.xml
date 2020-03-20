@@ -27,7 +27,6 @@
                 android:id="@+id/textViewNom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Rando Mont Blanc"
                 android:textColor="@color/colorText" />
         </LinearLayout>
 
@@ -49,7 +48,6 @@
                 android:id="@+id/textViewdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="04/03/2020"
                 android:textColor="@color/colorText" />
         </LinearLayout>
 
@@ -71,7 +69,6 @@
                 android:id="@+id/textViewLaval"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mont Blanc"
                 android:textColor="@color/colorText" />
         </LinearLayout>
 
@@ -93,7 +90,6 @@
                 android:id="@+id/textViewnb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="60"
                 android:textColor="@color/colorText" />
         </LinearLayout>
 
@@ -115,7 +111,6 @@
                 android:id="@+id/textViewEcheance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="02/02/2020"
                 android:textColor="@color/colorText" />
         </LinearLayout>
 
